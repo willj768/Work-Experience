@@ -3,9 +3,8 @@ from netmiko import ConnectHandler
 import time
 import datetime
 
-now = datetime.datetime.now()
-
 SLEEP_TIME = 30
+DEBOUNCE_TIME = 10
 
 def shutdown():
     ciscoDevice = {
@@ -44,15 +43,31 @@ def noShutdown():
     connection.disconnect()
 
 pir = MotionSensor(4)
+lastMotionTime = None
+portIsUp = False
 
 while True:
-    pir.wait_for_motion()
-    print("Motion Detected: ",now.strftime("%Y-%m-%d %H:%M:%S"))
-    noShutdown()
-    time.sleep(SLEEP_TIME)
-    pir.wait_for_no_motion()
-    print("Shutting Switch Port: ",now.strftime("%Y-%m-%d %H:%M:%S"))
-    shutdown()
+    if pir.motion_detected:
+        nowTime = time.time()
+
+        if lastMotionTime is None or (nowTime - lastMotionTime) > DEBOUNCE_TIME:
+            now = datetime.datetime.now()
+            print("[MOTION DETECTED]:", now.strftime("%Y-%m-%d %H:%M:%S"))
+            lastMotionTime = nowTime
+
+        if not portIsUp:
+            noShutdown()
+            portIsUp = True
+    else:
+        if portIsUp and lastMotionTime is not None:
+            if (time.time() - lastMotionTime) > SLEEP_TIME:
+                now = datetime.datetime.now()
+                print("[SHUTTING] no activity detected for 30 seconds:", now.strftime("%Y-%m-%d %H:%M:%S"))
+                shutdown()
+                portIsUp = False
+                lastMotionTime = None
+
+    time.sleep(1)
 
 #log actual time of event
 #check initial state of wap
