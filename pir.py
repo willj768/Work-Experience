@@ -10,7 +10,6 @@ DEBOUNCE_TIME = 10
 CARBON_INTENSITY_OF_ELECTRICITY = 0.124
 
 logData = []
-powerData = []
 totalShutdownTime = 0
 portShutdownTime = None
 
@@ -158,8 +157,14 @@ def logPowerUsage(powerData, durationHours, power, CARBON_INTENSITY_OF_ELECTRICI
     df = pd.DataFrame(powerData, columns=["Time (h)", "Power (kW)", "Carbon (g)"])
     outputFile = "power.csv"
     df.to_csv(outputFile, index=False)
+
+def importCSV():
+    df = pd.read_csv("power.csv")
+    powerData = df.values.tolist()
+    return powerData
     
 if __name__ == "__main__":
+    powerData = importCSV()
     portIsUp = isPortUp(ciscoDevice)
     if portIsUp:
         lastMotionTime = time.time()
@@ -170,6 +175,3 @@ if __name__ == "__main__":
     else:
         noShutdown(ciscoDevice)
         motionLoop()
-
-#calculate power saved and carbon footprint
-#add more ports
