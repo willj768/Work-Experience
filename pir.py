@@ -63,25 +63,29 @@ def handleNoMotion():
 
 def motionLoop():
     while True:
-        if pir.motion_detected:
-            handleMotion()
-        else:
-            handleNoMotion()
+        if monitorTimes():
+            if pir.motion_detected:
+                handleMotion()
+            else:
+                handleNoMotion()
         time.sleep(1)
 
 def monitorTimes():
     now = datetime.datetime.now()
-    return now.hour < 6 or now.hour > 20
-    #return now.hour > 0
+    weekday = now.weekday()
+    hour = now.hour
+    return hour < 6 or hour > 20, weekday >= 5
+    #return hour > 0
+    #return weekday <= 5
     
 if __name__ == "__main__":
     if monitorTimes():
         motionLoop()
     else:
         noShutdown(ciscoDevice)
+        motionLoop()
 
 #log actual time of event
-#add operational hours
 #log events into csv file
 #calculate power saved and carbon footprint
 #add more ports
