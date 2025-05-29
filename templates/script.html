@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Power and Carbon Usage</title>
+    </head>
+<body>
+    <h1>Total Carbon Saved: {{ totalCarbon }}g</h1>
+    <h1>Total Time Saved: {{ totalTime }} hours</h1>
+    <h1>Mean Power: {{ meanPower }}kW</h1>
+    <h1>Power and Carbon Usage Log</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Time Saved (h)</th>
+                <th>Power (kW)</th>
+                <th>Carbon (g)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in powerTable %}
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[2] }}</td>
+                <td>{{ row[3] }}</td>
+                <td>{{ row[4] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

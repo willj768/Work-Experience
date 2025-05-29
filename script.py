@@ -5,17 +5,24 @@ app = Flask(__name__)
 
 def importCSV():
     df = pd.read_csv("power.csv")
-    return df.values.tolist()
+    totalCarbon = df["Carbon (g)"].sum()
+    totalTime = df["Time Saved (h)"].sum()
+    meanPower = df["Power (kW)"].mean()
+    totalCarbon = round(totalCarbon, 4)
+    totalTime = round(totalTime, 4)
+    meanPower = round(meanPower, 4)
+    return df.values.tolist(), totalCarbon, totalTime, meanPower
 
 @app.route("/api/powerTable")
 def powerAPI():
-    powerData = importCSV()
-    return jsonify(powerData)
+    powerData, totalCarbon, totalTime, meanPower = importCSV()
+    return jsonify(powerData, totalCarbon, totalTime, meanPower)
 
 @app.route("/")
 def home():
-    powerData = importCSV()
-    return render_template("script.html", powerTable=powerData)
+    powerData, totalCarbon, totalTime, meanPower = importCSV()
+    return render_template("script.html", powerTable=powerData, totalCarbon=totalCarbon, totalTime=totalTime, meanPower=meanPower)
 
 if __name__ == "__main__":
     app.run(debug=True)
+    
