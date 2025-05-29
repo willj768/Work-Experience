@@ -6,11 +6,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     </head>
 <body>
-    <img src="{{ url_for('static', filename='images/opticore.png') }}" alt="opticore logo" class="logo">
-    <h1>Smarter Network - Energy Saving</h1>
-    <h2>Total Carbon Saved: {{ totalCarbon }}g</h2>
-    <h2>Total Time Saved: {{ totalTime }} hours</h2>
-    <h2>Mean Power: {{ meanPower }}kW</h2>
+    <div class="header">
+        <img src="{{ url_for('static', filename='images/opticore.png') }}" alt="opticore logo" class="logo">
+        <h1>Smarter Network - Energy Saving</h1>
+    </div>
+    <h3>Total Carbon Saved: {{ totalCarbon }}g</h3>
+    <h3>Total Time Saved: {{ totalTime }} hours</h3>
+    <h3>Mean Power: {{ meanPower }}kW</h3>
     <h2>Power and Carbon Usage Log</h2>
     <table>
         <thead>

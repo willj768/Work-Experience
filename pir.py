@@ -1,9 +1,11 @@
 from gpiozero import MotionSensor
 from netmiko import ConnectHandler
+from dotenv import load_dotenv
 import time
 import datetime
 import pandas as pd
 import re
+import os
 
 SLEEP_TIME = 30
 DEBOUNCE_TIME = 10
@@ -12,19 +14,19 @@ CARBON_INTENSITY_OF_ELECTRICITY = 0.124
 totalShutdownTime = 0
 portShutdownTime = None
 
-ciscoDevice = {
-        'device_type': 'cisco_ios',
-        'ip': '10.1.10.24',
-        'username': 'optiadmin',
-        'password': 'optiadmin',
-        'port': 22,
-        'secret': 'optiadmin',
-    }
-
 pir = MotionSensor(4)
 lastMotionTime = None
 portIsUp = False
 portShutdownTime = None
+
+def loadDetails():
+    load_dotenv(dotenv_path="test.env") 
+
+    username = os.getenv("API_USERNAME")
+    password = os.getenv("API_PASSWORD")
+    secret = os.getenv("API_SECRET")
+
+    return username, password, secret
 
 def isPortUp(ciscoDevice):
     connection = ConnectHandler(**ciscoDevice)
@@ -139,8 +141,13 @@ def monitorTimes():
     now = datetime.datetime.now()
     weekday = now.weekday()
     hour = now.hour
-    return hour < 6 or hour > 20, weekday >= 5
-    #return True
+    """if weekday >= 5:
+        return True
+    elif hour < 6 or hour > 20:
+        return True
+    else:
+        return False"""
+    return True
 
 def logMotion(logData):
     df = pd.DataFrame(logData, columns=["Event","Date", "Time"])
@@ -168,6 +175,17 @@ def importLogCSV():
     return logData
     
 if __name__ == "__main__":
+    username, password, secret = loadDetails()
+
+    ciscoDevice = {
+        'device_type': 'cisco_ios',
+        'ip': '10.1.10.24',
+        'username': username,
+        'password': password,
+        'port': 22,
+        'secret': secret,
+    }
+
     powerData = importPowerCSV()
     logData = importLogCSV()
     portIsUp = isPortUp(ciscoDevice)

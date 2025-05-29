@@ -1,7 +1,5 @@
 .logo {
-    position: absolute;
-    top: 20px;
-    left: 20px;
+    position: static;
     max-width: 100px;
     height: auto;
 }
@@ -11,6 +9,15 @@ body {
     background-color: #4634EB;
     color: white;
     padding-top: 120px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    gap: 20px;
 }
 
 
@@ -26,7 +33,12 @@ th, td {
 }
 
 h1 {
-    text-align: center;
+    text-align: left;
+    margin: 0;
+}
+
+h3 {
+    text-align: right;
 }
 
 .pagination {
