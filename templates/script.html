@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Power and Carbon Usage</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     </head>
 <body>
-    <h1>Total Carbon Saved: {{ totalCarbon }}g</h1>
-    <h1>Total Time Saved: {{ totalTime }} hours</h1>
-    <h1>Mean Power: {{ meanPower }}kW</h1>
-    <h1>Power and Carbon Usage Log</h1>
+    <img src="{{ url_for('static', filename='images/opticore.png') }}" alt="opticore logo" class="logo">
+    <h1>Smarter Network - Energy Saving</h1>
+    <h2>Total Carbon Saved: {{ totalCarbon }}g</h2>
+    <h2>Total Time Saved: {{ totalTime }} hours</h2>
+    <h2>Mean Power: {{ meanPower }}kW</h2>
+    <h2>Power and Carbon Usage Log</h2>
     <table>
         <thead>
             <tr>
@@ -31,5 +34,22 @@
             {% endfor %}
         </tbody>
     </table>
+    <div>
+    {% if currentPage > 1 %}
+        <a href="/?page={{ currentPage - 1 }}">« Prev</a>
+    {% endif %}
+
+    {% for p in range(1, totalPages + 1) %}
+        {% if p == currentPage %}
+            <strong>{{ p }}</strong>
+        {% else %}
+            <a href="/?page={{ p }}">{{ p }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if currentPage < totalPages %}
+        <a href="/?page={{ currentPage + 1 }}">Next »</a>
+    {% endif %}
+</div>
 </body>
 </html>

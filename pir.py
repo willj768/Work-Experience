@@ -139,9 +139,8 @@ def monitorTimes():
     now = datetime.datetime.now()
     weekday = now.weekday()
     hour = now.hour
-    #return hour < 6 or hour > 20, weekday >= 5
-    return hour > 0
-    #return weekday <= 5
+    return hour < 6 or hour > 20, weekday >= 5
+    #return True
 
 def logMotion(logData):
     df = pd.DataFrame(logData, columns=["Event","Date", "Time"])
